@@ -1,8 +1,6 @@
-Markdown
 # Network Reconnaissance and OSINT Project
 
 **Prepared by:** Jubin Varghese Mathew  
-
 
 ---
 
@@ -57,27 +55,36 @@ done < "$raw_list"
 
 rm "$raw_list"
 echo "[+] Done! Active hosts saved to $final_list"
-Results
-Target Domain: python.org
 
-Output Example (live_hosts.txt):
-
-Plaintext
+##Results
+**Target Domain: python.org**
+**Output Example (live_hosts.txt):**
 [http://africa.python.org](http://africa.python.org)
 [http://analytics.python.org](http://analytics.python.org)
 [http://blog-cn.python.org](http://blog-cn.python.org)
-2. Network Scanning Report (Nmap)
-We conducted host discovery, port scanning, and service version detection against an authorized lab target (10.10.10.45).
 
-Commands and Flags Used
-nmap -sn 10.10.10.45: Ping Sweep – Verifies if the host is active and reachable without scanning ports.
+---
 
-nmap -sS 10.10.10.45: SYN Stealth Scan – Identifies open TCP ports by sending half-open requests without creating a full handshake connection.
+## 2. Network Scanning Report (Nmap)
 
-nmap -sV -p 22,80,443,8080 10.10.10.45: Service Version Detection – Probes open ports to identify exact software versions, helping assess known vulnerabilities.
+### Objective
+The objective of this phase is to perform active host discovery, port scanning, and service version fingerprinting against an authorized lab target to map open entry points and system environments.
 
-Scan Results
-Plaintext
+### Tools Used
+* **Nmap:** For network infrastructure exploration, state detection, and service profiling.
+
+### Methodology
+1. **Host Verification:** Execute a fast ping sweep to ensure the target machine is active on the network segment.
+2. **Port State Analysis:** Launch a stealth TCP SYN scan against the standard ports to identify open listening ports.
+3. **Application Interrogation:** Probe verified open ports with protocol banners to map application layer service names and versions.
+
+### Commands and Flags Used
+* `nmap -sn 10.10.10.45`: **Ping Sweep** – Verifies if the host is active and reachable without scanning individual ports.
+* `nmap -sS 10.10.10.45`: **SYN Stealth Scan** – Identifies open TCP ports by checking for initial connection handshakes without establishing complete connections.
+* `nmap -sV -p 22,80,443,8080 10.10.10.45`: **Service Version Detection** – Probes open communication channels to extract application version data, narrowing down potential software vulnerabilities.
+
+### Scan Results
+```text
 $ nmap -sn 10.10.10.45
 Starting Nmap 7.95 ( [https://nmap.org](https://nmap.org) ) at 2026-06-23 14:45 IST
 Nmap scan report for 10.10.10.45
@@ -104,46 +111,122 @@ PORT     STATE SERVICE VERSION
 443/tcp  open  https   Apache httpd 2.4.52
 8080/tcp open  http    Apache Tomcat 9.0.58
 Service Info: OS: Linux
-Interpretation of Results
-The target is active. The system runs on Ubuntu Linux, exposing an Apache web server (2.4.52) on ports 80 and 443, an Apache Tomcat server (9.0.58) on port 8080, and OpenSSH 8.9p1 on port 22 for administrative communication.
 
-3. OSINT Footprinting Exercise
-An OSINT footprinting exercise was completed on GitHub, Inc. using only publicly available information sources to collect domain infrastructure, DNS data, and technological details safely.
+###Interpretation of Results
+**The network scan confirms that the target lab host is live and responding. Operating system fingerprinting indicates an underlying Ubuntu Linux environment. The system exposes an standard web application stack: Apache HTTP Server (2.4.52) handling traditional web services on ports 80 and 443, an Apache Tomcat server (9.0.58) active on port 8080, and an open OpenSSH 8.9p1 deployment on port 22 designated for secure administrative access.**
 
-WHOIS Domain Information
-Domain Name: github.com
 
-Registrar: MarkMonitor Inc.
+---
 
-Registration Date: 2007-10-09
+## 3. OSINT Footprinting Exercise
 
-Expiration Date: 2028-10-09
+### Objective
+The objective of this phase is to safely collect public domain infrastructure configurations, authoritative DNS mappings, and frontend architecture characteristics for a target platform using non-intrusive open-source intelligence methods.
 
-Domain Status: clientDeleteProhibited, clientTransferProhibited
+### Tools Used
+* **WHOIS Utilities:** For exploring registry creation timelines, expiration data, and operational name servers.
+* **Nslookup / Dig:** For evaluating structural IPv4 resolution records.
+* **Passive Stack Analysis:** For identifying public edge servers and delivery interfaces without direct engagement.
 
-Name Servers: dns1.p01.nsone.net, ns-1251.awsdns-28.org
+### Methodology
+1. **Domain Registration Analysis:** Query public registrar databases using WHOIS to map domain lifespan, current registry status, and primary nameservers.
+2. **DNS Record Interrogation:** Use command-line utilities to perform forward network lookup routing maps for apex assets.
+3. **Infrastructure Fingerprinting:** Evaluate public header configurations and CDN endpoints to classify frontend technology assets dynamically.
+		
+### WHOIS Domain Information
+| Record Property | Collected Value Details |
+| :--- | :--- |
+| **Domain Name** | github.com |
+| **Registrar** | MarkMonitor Inc. |
+| **Registration Date** | 2007-10-09 |
+| **Expiration Date** | 2028-10-09 |
+| **Domain Status** | clientDeleteProhibited, clientTransferProhibited |
+| **Name Servers** | dns1.p01.nsone.net, ns-1251.awsdns-28.org |
 
-DNS Queries (nslookup & dig)
-Plaintext
+### DNS Queries (nslookup & dig)
+```text
 $ nslookup github.com
-Name:   github.com
+Name:    github.com
 Address: 140.82.121.4
-Interpretation: The apex domain routes back to active IP address 140.82.121.4, which forms part of GitHub's cloud block.
 
-Technology Stack Fingerprinting
-Web Server/CDN Network: Fastly CDN
+I###nterpretation: 
 
-Security Controls: Strict-Transport-Security (HSTS) deployed
+**The apex domain resolves directly to the active IPv4 target address 140.82.121.4, confirming active public routing paths via GitHub's assigned autonomous system network boundaries.**
 
-UI Frameworks/Frontend: Web Components, JavaScript ES Modules
 
-4. Documented Methodology
-This project used a systematic information-gathering approach. We began with OSINT footprinting and passive subdomain hunting to gather domain assets and DNS records without directly contacting internal target systems. Next, we used a custom Bash script to automate active live-host verification. Finally, we performed network mapping using Nmap scanning tools within an authorized lab environment to identify active hosts, open ports, and service versions.
 
-5. Conclusion
-This project provided practical experience across the primary stages of cybersecurity reconnaissance, automation, network scanning, and OSINT footprinting. Writing the custom Bash script showed how automation can save manual effort and streamline asset collection. Using Nmap allowed for precise network mapping and host profiling within an authorized lab target. Finally, the OSINT exercise on GitHub demonstrated how valuable structural information can be gathered ethically using entirely public sources.
+###Technology Stack Fingerprinting
 
-6. GitHub Repository
-The automation script and structural reconnaissance files are tracked and documented at:
+**Web Server/CDN Network: Fastly Content Delivery Network (CDN) **
 
-https://github.com/jubinjvm822-sudo/PROJECT.git
+**Security Controls: Strict-Transport-Security (HSTS) configuration verified**
+
+**AUI Frameworks/Frontend: Native Web Components, JavaScript ES Modules**
+
+---
+
+## 4. Documented Methodology
+
+### Objective
+The objective of this phase is to establish a systematic, reproducible blueprint for the entire information-gathering, automation, and vulnerability assessment workflow.
+
+### Tools Used
+* **Passive Intelligence Tools:** WHOIS, Nslookup, Dig (For initial asset identification).
+* **Automation Engines:** Bash, Assetfinder, Curl (For active subdomain filtering).
+* **Active Probing Utility:** Nmap (For deep network-layer and transport-layer auditing).
+
+### Methodology
+1. **Passive Information Gathering:** Initial footprinting began with open-source WHOIS and public DNS querying to identify root authority layers safely without generating traffic logs.
+2. **Reconnaissance Automation:** Developed and launched a custom Bash pipeline integrating `assetfinder` and `curl` to dynamically isolate valid, responsive subdomains from broader record groups.
+3. **Active Lab Mapping:** Deployed precise `Nmap` probing sequences within an authorized lab environment to determine active ports, firewall behaviors, and concrete software versions on target endpoints.
+
+### Summary Matrix
+| Phase | Focus Layer | Principal Tool Deployed | Core Objective |
+| :--- | :--- | :--- | :--- |
+| **Phase 1: OSINT** | Public Metadata | WHOIS / Nslookup | Boundary Mapping |
+| **Phase 2: Automation** | Subdomain Infrastructure | Bash Script (`recon.sh`) | Live Host Isolation |
+| **Phase 3: Scanning** | Transport & Service Layer | Nmap Suite | Software Version Identification |
+
+---
+
+## 5. Conclusion
+
+### Objective
+The objective of this phase is to evaluate the operational outcomes of the security lifecycle assessment and summarize the core security posture metrics observed.
+
+### Key Takeaways
+* **Automation Efficiency:** Custom Bash development demonstrates how manual target sorting can be minimized to improve operational speed.
+* **Proactive Mapping:** Precision scanning with Nmap validates that accurate service profiling is foundational for identifying vulnerable network entry points.
+* **Intelligence Gathering:** Passive OSINT mapping proves that critical external corporate structural data can be systematically acquired without direct threat generation.
+
+### Summary Metrics
+| Evaluation Category | Target Group | Primary Security Metric | Status |
+| :--- | :--- | :--- | :--- |
+| **Process Automation** | python.org subdomains | Automated Active Filtering | Successful |
+| **Network Probing** | 10.10.10.45 (Lab) | Version Banner Isolation | Complete |
+| **Public Footprinting** | github.com | Infrastructure Mappings | Documented |
+
+### Final Summary
+This multi-module implementation provided hands-on experience covering core components of security reconnaissance, process automation, active scanning, and OSINT asset verification. Building custom automation scripts highlights how modern teams minimize manual search routines to collect environment metrics at scale. Applying specialized network probes demonstrated the importance of precise version fingerprinting for risk analysis, while the external OSINT phase proved that rich system blueprints can be constructed using public records alone.
+
+---
+
+## 6. GitHub Repository
+
+### Objective
+The objective of this phase is to establish a secure, version-controlled source code management framework to track development artifacts, scripts, and deployment documentation.
+
+### Version Control Platform
+* **Hosting Service:** GitHub, Inc.
+* **Tracking Engine:** Git Core v2.45+
+* **Primary Branch:** `main`
+
+### Repository Architecture Matrix
+| Tracked File | File Execution Mode | Operational Description |
+| :--- | :--- | :--- |
+| `recon.sh` | Executable Script (`chmod +x`) | Automated Bash pipeline for passive subdomain discovery and active HTTP validation checks. |
+| `README.md` | Markdown Document | Complete technical project blueprint, network logs, OSINT findings, and methodology reports. |
+
+### Upstream Remote Link
+All functional deployment files, modular logic scripts, and tracking configurations developed for this security blueprint are actively managed and publicly hosted at:  
+ [https://github.com/jubinjvm822-sudo/PROJECT.git](https://github.com/jubinjvm822-sudo/PROJECT.git)
