@@ -55,6 +55,7 @@ done < "$raw_list"
 
 rm "$raw_list"
 echo "[+] Done! Active hosts saved to $final_list"
+```
 
 ##Results
 **Target Domain: python.org**
@@ -64,6 +65,7 @@ echo "[+] Done! Active hosts saved to $final_list"
 [http://blog-cn.python.org](http://blog-cn.python.org)
 
 ---
+
 
 ## 2. Network Scanning Report (Nmap)
 
@@ -111,7 +113,7 @@ PORT     STATE SERVICE VERSION
 443/tcp  open  https   Apache httpd 2.4.52
 8080/tcp open  http    Apache Tomcat 9.0.58
 Service Info: OS: Linux
-
+```
 ###Interpretation of Results
 **The network scan confirms that the target lab host is live and responding. Operating system fingerprinting indicates an underlying Ubuntu Linux environment. The system exposes an standard web application stack: Apache HTTP Server (2.4.52) handling traditional web services on ports 80 and 443, an Apache Tomcat server (9.0.58) active on port 8080, and an open OpenSSH 8.9p1 deployment on port 22 designated for secure administrative access.**
 
@@ -164,7 +166,7 @@ I###nterpretation:
 **AUI Frameworks/Frontend: Native Web Components, JavaScript ES Modules**
 
 ---
-
+```
 ## 4. Documented Methodology
 
 ### Objective
